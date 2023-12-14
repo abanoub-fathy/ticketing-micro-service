@@ -1,30 +1,34 @@
-import React from "react";
-import { useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
+import { useRequest } from "../../hooks/useRequest";
+import { useRouter } from "next/router";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const router = useRouter();
+  const useReqConfig = {
+    url: "/api/users/signup",
+    method: "post",
+    body: {
+      email,
+      password,
+    },
+    onSuccess: () => router.push("/"),
+  };
+  const [doRequest, errsJSX] = useRequest(useReqConfig);
+
   const signupHandler = async (e) => {
     e.preventDefault();
 
-    try {
-      const { data } = await axios.post("/api/users/signup", {
-        email,
-        password,
-      });
-
-      console.log(data);
-    } catch (err) {
-      console.log(err.response.data);
-    }
+    // the error is handled in this hook
+    doRequest();
   };
 
   return (
     <form onSubmit={signupHandler}>
       <h1>SignUp</h1>
-      <div className="form-group">
+      <div className="form-group mt-2 mb-2">
         <label htmlFor="email">Email</label>
         <input
           className="form-control"
@@ -34,7 +38,7 @@ const Signup = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
       </div>
-      <div className="form-group">
+      <div className="form-group mt-2 mb-2">
         <label htmlFor="password">Password</label>
         <input
           className="form-control"
@@ -44,6 +48,10 @@ const Signup = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
+
+      {/* display errors if any */}
+      {errsJSX}
+
       <button type="submit" className="btn btn-primary">
         Submit
       </button>
