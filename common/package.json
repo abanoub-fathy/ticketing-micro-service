@@ -1,0 +1,16 @@
+{
+  "name": "@ticketiano/common",
+  "version": "1.0.0",
+  "description": "common shared library between the micro services",
+  "main": "index.js",
+  "scripts": {
+    "clean": "del-cli ./build/**",
+    "build": "npm run clean && tsc"
+  },
+  "author": "abanoub fathy",
+  "license": "ISC",
+  "devDependencies": {
+    "del-cli": "^5.1.0",
+    "typescript": "^5.3.3"
+  }
+}
