@@ -3,8 +3,7 @@ require("express-async-errors");
 import cookieSession from "cookie-session";
 
 import { userRouter } from "./routes/user";
-import { errorHandler } from "./middlewares/error-handler";
-import { NotFoundError } from "./errors/not-found-error";
+import { errorHandler, NotFoundError } from "@ticketiano/common";
 
 const app = express();
 app.set("trust proxy", true);

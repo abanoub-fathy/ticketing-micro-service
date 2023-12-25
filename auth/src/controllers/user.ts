@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { User } from "../models/user";
-import { ConflictError } from "../errors/conflict-error";
-import { BadRequestError } from "../errors/bad-request-error";
+import { ConflictError, BadRequestError } from "@ticketiano/common";
 import { Password } from "../utils/password";
 import jwt from "jsonwebtoken";
 

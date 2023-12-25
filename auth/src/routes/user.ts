@@ -9,8 +9,7 @@ import {
   signupValidatos,
   signinValidators,
 } from "../validators/validtion-rules";
-import { validateRequest } from "../middlewares/validate-request";
-import { currentUser } from "../middlewares/current-user";
+import { validateRequest, currentUser } from "@ticketiano/common";
 
 const router = Router();
 
