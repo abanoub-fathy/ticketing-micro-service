@@ -1,11 +1,16 @@
 {
   "name": "@ticketiano/common",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "common shared library between the micro services",
-  "main": "index.js",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "files": [
+    "build/**/*"
+  ],
   "scripts": {
     "clean": "del-cli ./build/**",
-    "build": "npm run clean && tsc"
+    "build": "npm run clean && tsc",
+    "pub": "git add . && git commit -m \"updates\" && git push origin main && npm run build && npm publish"
   },
   "author": "abanoub fathy",
   "license": "ISC",
