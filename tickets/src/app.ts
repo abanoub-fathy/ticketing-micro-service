@@ -2,7 +2,8 @@ import express from "express";
 require("express-async-errors");
 import cookieSession from "cookie-session";
 
-import { errorHandler, NotFoundError } from "@ticketiano/common";
+import { currentUser, errorHandler, NotFoundError } from "@ticketiano/common";
+import { ticketRouter } from "./routes/tickets";
 
 const app = express();
 app.set("trust proxy", true);
@@ -16,10 +17,10 @@ app.use(
   })
 );
 
+app.use(currentUser);
+
 // Routes
-app.use("/", (req, res) => {
-  res.send("Hello in tickets service");
-});
+app.use("/api/tickets", ticketRouter);
 
 // Not Found handler
 app.all("*", async () => {
