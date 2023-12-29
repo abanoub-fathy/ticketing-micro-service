@@ -1,6 +1,7 @@
 import request from "supertest";
 import { app } from "../../app";
 import { signin } from "../../test/helpers";
+import { Ticket } from "../../models/ticket";
 
 it("should return a status code indicating there is an endpoint for creating tickets", async () => {
   const response = await request(app).post("/api/tickets").send({});
@@ -17,7 +18,6 @@ it("should not returning 401 unauthanticated if the user is signed in", async ()
     .set("Cookie", signin())
     .send({});
 
-  console.log("response.statusCode", response.statusCode);
   expect(response.statusCode).not.toEqual(401);
 });
 
@@ -57,4 +57,30 @@ it("should return an error if an invalid price is provided", async () => {
       title: "laskdfj",
     })
     .expect(400);
+});
+
+it("should create new ticket record in db when request data is valid", async () => {
+  // expect number of tickets to be zero
+  let tickets = await Ticket.find();
+  expect(tickets.length).toEqual(0);
+
+  const body = {
+    title: "golden ticket",
+    price: 200,
+  };
+
+  // create ticket with the create request
+  await request(app)
+    .post("/api/tickets")
+    .set("Cookie", signin())
+    .send(body)
+    .expect(201);
+
+  // expect number of tickets to be 1
+  tickets = await Ticket.find();
+  expect(tickets.length).toEqual(1);
+
+  // expect the created ticket should have the same field as body
+  expect(tickets[0].title).toEqual(body.title);
+  expect(tickets[0].price).toEqual(body.price);
 });

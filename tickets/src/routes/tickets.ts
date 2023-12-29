@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createTicket } from "../controllers/tickets";
+import { createTicket, getTicket } from "../controllers/tickets";
 import { requireAuth, validateRequest } from "@ticketiano/common";
 import { createTicketValidators } from "../validators/ticket-rules";
 
@@ -12,5 +12,7 @@ router.post(
   validateRequest,
   createTicket
 );
+
+router.get("/:id", getTicket);
 
 export { router as ticketRouter };
