@@ -1,7 +1,15 @@
 import { Router } from "express";
-import { createTicket, getTicket } from "../controllers/tickets";
+import {
+  createTicket,
+  getAllTickets,
+  getTicket,
+  updateTicket,
+} from "../controllers/tickets";
 import { requireAuth, validateRequest } from "@ticketiano/common";
-import { createTicketValidators } from "../validators/ticket-rules";
+import {
+  createTicketValidators,
+  updateTicketValidators,
+} from "../validators/ticket-rules";
 
 const router = Router();
 
@@ -14,5 +22,13 @@ router.post(
 );
 
 router.get("/:id", getTicket);
+router.get("/", getAllTickets);
+router.put(
+  "/:id",
+  requireAuth,
+  updateTicketValidators,
+  validateRequest,
+  updateTicket
+);
 
 export { router as ticketRouter };

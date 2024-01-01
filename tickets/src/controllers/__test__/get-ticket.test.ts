@@ -1,10 +1,9 @@
 import request from "supertest";
 import { app } from "../../app";
-import mongoose from "mongoose";
-import { Ticket } from "../../models/ticket";
+import { generateRandomId, saveTicket } from "../../test/helpers";
 
 it("should return 404 when there is not ticket with specified id", async () => {
-  const randomId = new mongoose.Types.ObjectId();
+  const randomId = generateRandomId();
   const url = `/api/tickets/${randomId}`;
   await request(app).get(url).send().expect(404);
 });
@@ -14,9 +13,9 @@ it("should return ticket when it exists", async () => {
   const ticketAttrs = {
     title: "golden ticket",
     price: 200,
-    userId: new mongoose.Types.ObjectId().toString(),
+    userId: generateRandomId(),
   };
-  const createdTicket = await Ticket.build(ticketAttrs).save();
+  const createdTicket = await saveTicket(ticketAttrs);
 
   // get the ticket from db by id
   const url = `/api/tickets/${createdTicket.id}`;
