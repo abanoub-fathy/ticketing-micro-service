@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: nats
-          image: nats-streaming-server:0.17.0
+          image: nats-streaming:0.17.0
           args:
             [
               "-p",
