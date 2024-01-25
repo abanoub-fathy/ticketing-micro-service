@@ -3,6 +3,7 @@ import { Ticket } from "../models/ticket";
 import { NotFoundError, UnAuthenticatedError } from "@ticketiano/common";
 import { TicketCreatedPublisher } from "../events/publishers/ticket-created-publisher";
 import nats from "../nats-client-wrapper";
+import { TicketUpdatedPublisher } from "../events/publishers/ticket-updated-publisher";
 
 export const createTicket = async (req: Request, res: Response) => {
   const { title, price } = req.body;
@@ -59,6 +60,13 @@ export const updateTicket = async (req: Request, res: Response) => {
   }
 
   await ticket.save();
+
+  await new TicketUpdatedPublisher(nats.client).publish({
+    id: ticket.id,
+    price: ticket.price,
+    title: ticket.title,
+    userId: ticket.userId,
+  });
 
   res.status(200).json(ticket);
 };
