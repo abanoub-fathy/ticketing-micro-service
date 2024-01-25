@@ -1,5 +1,6 @@
 import { app } from "./app";
 import mongoose from "mongoose";
+import stan from "./nats-client-wrapper";
 
 const start = async () => {
   // check the secret key exists
@@ -14,6 +15,15 @@ const start = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("📅 Database is connected successfully!");
+
+    await stan.connect("ticketing", "sdsdsd", "http://nats-srv:4222");
+    stan.client.on("close", () => {
+      console.log("closing down the listener");
+      process.exit();
+    });
+
+    process.on("SIGINT", () => stan.client.close());
+    process.on("SIGTERM", () => stan.client.close());
   } catch (err) {
     console.error(err);
     return;

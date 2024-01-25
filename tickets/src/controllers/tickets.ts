@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { Ticket } from "../models/ticket";
 import { NotFoundError, UnAuthenticatedError } from "@ticketiano/common";
+import { TicketCreatedPublisher } from "../events/publishers/ticket-created-publisher";
+import nats from "../nats-client-wrapper";
 
 export const createTicket = async (req: Request, res: Response) => {
   const { title, price } = req.body;
@@ -12,6 +14,13 @@ export const createTicket = async (req: Request, res: Response) => {
   });
 
   await ticket.save();
+
+  await new TicketCreatedPublisher(nats.client).publish({
+    id: ticket.id,
+    title: ticket.title,
+    price: ticket.price,
+    userId: ticket.userId,
+  });
 
   res.status(201).json(ticket);
 };
