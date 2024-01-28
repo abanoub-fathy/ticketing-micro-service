@@ -12,11 +12,27 @@ const start = async () => {
     throw new Error("MONGO_URI must be defined");
   }
 
+  if (!process.env.NATS_CLUSTER_ID) {
+    throw new Error("NATS_CLUSTER_ID must be defined");
+  }
+
+  if (!process.env.NATS_CLIENT_ID) {
+    throw new Error("NATS_CLIENT_ID must be defined");
+  }
+
+  if (!process.env.NATS_URL) {
+    throw new Error("NATS_URL must be defined");
+  }
+
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("📅 Database is connected successfully!");
 
-    await stan.connect("ticketing", "sdsdsd", "http://nats-srv:4222");
+    await stan.connect(
+      process.env.NATS_CLUSTER_ID,
+      process.env.NATS_CLIENT_ID,
+      process.env.NATS_URL
+    );
     stan.client.on("close", () => {
       console.log("closing down the listener");
       process.exit();
