@@ -3,6 +3,8 @@ import path from "path";
 import { MongoMemoryServer } from "mongodb-memory-server";
 require("dotenv").config({ path: path.join(__dirname, "../../test.env") });
 
+jest.mock("../nats-client-wrapper.ts");
+
 let mongo: MongoMemoryServer;
 beforeAll(async () => {
   mongo = await MongoMemoryServer.create();
