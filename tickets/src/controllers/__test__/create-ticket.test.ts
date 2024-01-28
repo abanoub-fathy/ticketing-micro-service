@@ -2,6 +2,7 @@ import request from "supertest";
 import { app } from "../../app";
 import { signin } from "../../test/helpers";
 import { Ticket } from "../../models/ticket";
+import natsWrapper from "../../nats-client-wrapper";
 
 it("should return a status code indicating there is an endpoint for creating tickets", async () => {
   const response = await request(app).post("/api/tickets").send({});
@@ -83,4 +84,20 @@ it("should create new ticket record in db when request data is valid", async () 
   // expect the created ticket should have the same field as body
   expect(tickets[0].title).toEqual(body.title);
   expect(tickets[0].price).toEqual(body.price);
+});
+
+it("should invoke the client publish fn when creating new ticket", async () => {
+  const body = {
+    title: "golden ticket",
+    price: 200,
+  };
+
+  // create ticket with the create request
+  await request(app)
+    .post("/api/tickets")
+    .set("Cookie", signin())
+    .send(body)
+    .expect(201);
+
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
 });
