@@ -13,6 +13,8 @@ export const errorHandler = (
     });
   }
 
+  console.log(err);
+
   return res.status(500).send({
     errors: [{ message: "Something went wrong!" }],
   });
