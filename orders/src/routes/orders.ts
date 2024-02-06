@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { requireAuth, validateRequest } from "@ticketiano/common";
+import { createOrderRules } from "../validators/order-rules";
 import {
   createOrder,
   deleteOrder,
@@ -10,7 +12,7 @@ const router = Router();
 
 router.get("/", getAllOrders);
 router.get("/:orderId", getOrder);
-router.post("/", createOrder);
+router.post("/", requireAuth, createOrderRules, validateRequest, createOrder);
 router.delete("/:orderId", deleteOrder);
 
 export { router as orderRouter };
