@@ -17,16 +17,26 @@ export interface TicketModel extends mongoose.Model<TicketDoc> {
   build(attrs: TicketAttrs): TicketDoc;
 }
 
-const ticketSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: [true, "ticket should have a title"],
+const ticketSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: [true, "ticket should have a title"],
+    },
+    price: {
+      type: Number,
+      min: 0,
+    },
   },
-  price: {
-    type: Number,
-    min: 0,
-  },
-});
+  {
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+      },
+    },
+  }
+);
 
 ticketSchema.statics.build = function (attrs: TicketAttrs): TicketDoc {
   return new Ticket(attrs);
@@ -45,17 +55,6 @@ ticketSchema.methods.isReserved = async function () {
   });
 
   return existingOrder ? true : false;
-};
-
-ticketSchema.methods.toJSON = function () {
-  var obj = this.toObject();
-
-  delete obj.__v;
-
-  obj.id = obj._id;
-  delete obj._id;
-
-  return obj;
 };
 
 const Ticket = mongoose.model<TicketDoc, TicketModel>("Ticket", ticketSchema);
