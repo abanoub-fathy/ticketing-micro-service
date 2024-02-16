@@ -3,7 +3,6 @@ const natsWrapper = {
     publish: jest
       .fn()
       .mockImplementation((subject: string, data: string, cb: () => void) => {
-        console.log("calling mock function for publish");
         cb();
       }),
   },

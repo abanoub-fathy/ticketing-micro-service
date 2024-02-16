@@ -5,14 +5,14 @@ import { Ticket, TicketDoc } from "./ticket";
 export { OrderStatus };
 
 interface OrderAttrs {
-  userId: String;
+  userId: string;
   status: OrderStatus;
   expiresAt: Date;
   ticket: TicketDoc;
 }
 
 export interface OrderDoc extends mongoose.Document {
-  userId: String;
+  userId: string;
   status: OrderStatus;
   createdAt: Date;
   expiresAt: Date;

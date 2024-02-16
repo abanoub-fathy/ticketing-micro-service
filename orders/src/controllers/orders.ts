@@ -7,6 +7,9 @@ import {
   UnAuthenticatedError,
 } from "@ticketiano/common";
 import { Order } from "../models/order";
+import { OrderCreatedPublisher } from "../events/publishers/order-created-publisher";
+import natsClientWrapper from "../nats-client-wrapper";
+import { OrderCancelledPublisher } from "../events/publishers/order-cancelled-publisher";
 
 const EXPIRATION_WINDOW = 15 * 60;
 
@@ -59,12 +62,24 @@ export const createOrder = async (req: Request, res: Response) => {
 
   await order.save();
 
+  // publish order created event
+  await new OrderCreatedPublisher(natsClientWrapper.client).publish({
+    id: order.id,
+    status: order.status,
+    userId: order.userId,
+    expiresAt: order.expiresAt.toISOString(),
+    ticket: {
+      id: order.ticket.id,
+      price: order.ticket.price,
+    },
+  });
+
   // return response
   res.status(201).json(order);
 };
 
 export const deleteOrder = async (req: Request, res: Response) => {
-  const order = await Order.findById(req.params.orderId);
+  const order = await Order.findById(req.params.orderId).populate("ticket");
   if (!order) {
     throw new NotFoundError();
   }
@@ -76,7 +91,13 @@ export const deleteOrder = async (req: Request, res: Response) => {
   order.status = OrderStatus.Cancelled;
   await order.save();
 
-  // TODO: we need to publish an event for saying that the order is deleted/cancelled
+  // publish order cancelled event
+  await new OrderCancelledPublisher(natsClientWrapper.client).publish({
+    id: order.id,
+    ticket: {
+      id: order.ticket.id,
+    },
+  });
 
   res.status(204).json(order);
 };
