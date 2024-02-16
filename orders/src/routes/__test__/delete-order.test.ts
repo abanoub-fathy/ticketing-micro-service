@@ -7,6 +7,7 @@ import {
   signin,
 } from "../../test/helpers";
 import { Order, OrderStatus } from "../../models/order";
+import natsClientWrapper from "../../nats-client-wrapper";
 
 it("should return 401 when trying to delet order if the user is not authenticated", async () => {
   const orderId = generateRandomId();
@@ -52,4 +53,14 @@ it("should delet only user order when it is requested", async () => {
     .expect(401);
 });
 
-it.todo("should emit an event when the order is deleted");
+it("should emit an event when the order is deleted", async () => {
+  const userId = generateRandomId();
+  const ticket = await saveTicket();
+  const order = await saveOrder(userId, ticket);
+  await request(app)
+    .delete(`/api/orders/${order.id}`)
+    .set("Cookie", signin(userId))
+    .expect(204);
+
+  expect(natsClientWrapper.client.publish).toHaveBeenCalled();
+});

@@ -1,6 +1,7 @@
 import { app } from "../../app";
 import { Order, OrderStatus } from "../../models/order";
 import { Ticket } from "../../models/ticket";
+import natsClientWrapper from "../../nats-client-wrapper";
 import { generateRandomId, signin } from "../../test/helpers";
 import request from "supertest";
 
@@ -86,4 +87,25 @@ it("should create new order", async () => {
   expect(nowOrders.length).toEqual(1);
 });
 
-it.todo("should emit an event when the order is created");
+it("should emit an event when the order is created", async () => {
+  const expiresAt = new Date();
+  expiresAt.setSeconds(expiresAt.getSeconds() + 15 * 60);
+  const ticket = Ticket.build({
+    price: 500,
+    title: "new title",
+  });
+  await ticket.save();
+
+  const previousOrders = await Order.find({});
+  expect(previousOrders.length).toEqual(0);
+
+  await request(app)
+    .post("/api/orders")
+    .set("Cookie", signin())
+    .send({
+      ticketId: ticket.id,
+    })
+    .expect(201);
+
+  expect(natsClientWrapper.client.publish).toHaveBeenCalled();
+});
