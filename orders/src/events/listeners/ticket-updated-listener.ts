@@ -11,12 +11,13 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
     data: TicketUpdatedEvent["data"],
     msg: Message
   ): Promise<void> {
-    const { id, title, price } = data;
+    const { id, title, price, version } = data;
 
-    const ticket = await Ticket.findById(id);
+    const ticket = await Ticket.findByEvent(data);
     if (!ticket) {
       throw new Error("ticket not found");
     }
+
     ticket.title = title;
     ticket.price = price;
     await ticket.save();

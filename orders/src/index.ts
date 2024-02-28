@@ -1,6 +1,8 @@
 import { app } from "./app";
 import mongoose from "mongoose";
 import stan from "./nats-client-wrapper";
+import { TicketCreatedListener } from "./events/listeners/ticket-created-listener";
+import { TicketUpdatedListener } from "./events/listeners/ticket-updated-listener";
 
 const start = async () => {
   // check the secret key exists
@@ -40,6 +42,10 @@ const start = async () => {
 
     process.on("SIGINT", () => stan.client.close());
     process.on("SIGTERM", () => stan.client.close());
+
+    //subscribe to events
+    new TicketCreatedListener(stan.client).subscribe();
+    new TicketUpdatedListener(stan.client).subscribe();
   } catch (err) {
     console.error(err);
     return;

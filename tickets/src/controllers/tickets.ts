@@ -18,6 +18,7 @@ export const createTicket = async (req: Request, res: Response) => {
 
   await new TicketCreatedPublisher(nats.client).publish({
     id: ticket.id,
+    version: ticket.version,
     title: ticket.title,
     price: ticket.price,
     userId: ticket.userId,
@@ -63,6 +64,7 @@ export const updateTicket = async (req: Request, res: Response) => {
 
   await new TicketUpdatedPublisher(nats.client).publish({
     id: ticket.id,
+    version: ticket.version,
     price: ticket.price,
     title: ticket.title,
     userId: ticket.userId,
