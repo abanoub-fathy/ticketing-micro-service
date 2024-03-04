@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import { Ticket } from "../models/ticket";
-import { NotFoundError, UnAuthenticatedError } from "@ticketiano/common";
+import {
+  BadRequestError,
+  NotFoundError,
+  UnAuthenticatedError,
+} from "@ticketiano/common";
 import { TicketCreatedPublisher } from "../events/publishers/ticket-created-publisher";
 import nats from "../nats-client-wrapper";
 import { TicketUpdatedPublisher } from "../events/publishers/ticket-updated-publisher";
@@ -50,6 +54,10 @@ export const updateTicket = async (req: Request, res: Response) => {
 
   if (ticket.userId !== req.currentUser!.id) {
     throw new UnAuthenticatedError("the ticket does not belong to you");
+  }
+
+  if (ticket.orderId) {
+    throw new BadRequestError("could not update a reserved ticket");
   }
 
   if (req.body.title) {

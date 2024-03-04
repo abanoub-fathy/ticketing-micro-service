@@ -103,3 +103,27 @@ it("should invoke event fn when updating event", async () => {
 
   expect(natsWrapper.client.publish).toHaveBeenCalled();
 });
+
+it("should not allow update the ticket when it is reserved", async () => {
+  const userId = generateRandomId();
+
+  const ticket = await saveTicket({
+    title: "golden ticket",
+    price: 100,
+    userId,
+  });
+  // assign orderId to the ticket (that means it is reserved)
+  ticket.orderId = generateRandomId();
+  await ticket.save();
+
+  const updates = {
+    title: "new title",
+    price: 700,
+  };
+
+  await request(app)
+    .put(`/api/tickets/${ticket.id}`)
+    .set("Cookie", signin(userId))
+    .send(updates)
+    .expect(400);
+});
