@@ -1,4 +1,8 @@
-import { OrderCreatedEvent, OrderStatus } from "@ticketiano/common";
+import {
+  OrderCreatedEvent,
+  OrderStatus,
+  TicketUpdatedEvent,
+} from "@ticketiano/common";
 import { generateRandomId } from "../../../test/helpers";
 import { OrderCreatedListener } from "../order-created-listener";
 import natsClientWrapper from "../../../nats-client-wrapper";
@@ -51,5 +55,17 @@ describe("successful order created event listener", () => {
     await listener.onMessage(data, msg);
 
     expect(msg.ack).toHaveBeenCalled();
+  });
+
+  it("should publsih ticket updated event", async () => {
+    const { ticket, listener, data, msg } = await setupTest();
+    await listener.onMessage(data, msg);
+
+    expect(natsClientWrapper.client.publish).toHaveBeenCalled();
+    const eventData: TicketUpdatedEvent["data"] = JSON.parse(
+      (natsClientWrapper.client.publish as jest.Mock).mock.calls[0][1]
+    );
+    expect(eventData.id).toEqual(ticket.id);
+    expect(eventData.orderId).toEqual(data.id);
   });
 });
