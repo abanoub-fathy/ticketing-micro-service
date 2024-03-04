@@ -1,31 +1,31 @@
 import {
-  OrderCancelledEvent,
   OrderCreatedEvent,
   OrderStatus,
   TicketUpdatedEvent,
 } from "@ticketiano/common";
 import { generateRandomId } from "../../../test/helpers";
+import { OrderCreatedListener } from "../order-created-listener";
 import natsClientWrapper from "../../../nats-client-wrapper";
 import { Ticket } from "../../../models/ticket";
-import { OrderCancelledListener } from "../order-cancelled-listener";
 
 const setupTest = async () => {
   const userId = generateRandomId();
 
-  // create a ticket with a new order
   const ticket = await Ticket.build({
     title: "title 1",
     price: 400,
     userId,
-  });
-  ticket.orderId = generateRandomId();
-  await ticket.save();
+  }).save();
 
-  const data: OrderCancelledEvent["data"] = {
+  const data: OrderCreatedEvent["data"] = {
     id: generateRandomId(),
+    status: OrderStatus.Created,
+    userId: generateRandomId(),
+    expiresAt: new Date().toISOString(),
     version: 0,
     ticket: {
       id: ticket.id,
+      price: ticket.price,
     },
   };
 
@@ -34,20 +34,20 @@ const setupTest = async () => {
     ack: jest.fn(),
   };
 
-  const listener = new OrderCancelledListener(natsClientWrapper.client);
+  const listener = new OrderCreatedListener(natsClientWrapper.client);
 
   return { ticket, listener, data, msg };
 };
 
-describe("listen to order cancelled", () => {
-  it("should update the ticket and remove the orderId", async () => {
+describe("successful order created event listener", () => {
+  it("should update the ticket", async () => {
     const { ticket, listener, data, msg } = await setupTest();
     await listener.onMessage(data, msg);
 
     const updatedTicket = await Ticket.findById(data.ticket.id);
 
     expect(updatedTicket!.version).toEqual(ticket.version + 1);
-    expect(updatedTicket!.orderId).toBeUndefined();
+    expect(updatedTicket!.orderId).toEqual(data.id);
   });
 
   it("should call ack function", async () => {
@@ -66,6 +66,6 @@ describe("listen to order cancelled", () => {
       (natsClientWrapper.client.publish as jest.Mock).mock.calls[0][1]
     );
     expect(eventData.id).toEqual(ticket.id);
-    expect(eventData.orderId).toEqual(undefined);
+    expect(eventData.orderId).toEqual(data.id);
   });
 });
