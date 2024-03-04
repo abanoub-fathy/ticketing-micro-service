@@ -12,11 +12,9 @@ export abstract class Listener<T extends Event> {
   abstract subject: T["subject"];
   abstract queueGroupName: string;
 
-  // private
-  private client: Stan;
-
   // protected
   protected ackWaitTime = 5 * 1000;
+  protected client: Stan;
 
   // constructor
   constructor(client: Stan) {
