@@ -1,3 +1,4 @@
+import { OrderCreatedListener } from "./events/listeners/order-created-listener";
 import stan from "./nats-client-wrapper";
 
 const start = async () => {
@@ -14,6 +15,10 @@ const start = async () => {
     throw new Error("NATS_URL must be defined");
   }
 
+  if (!process.env.REDIS_HOST) {
+    throw new Error("REDIS_HOST must be defined");
+  }
+
   try {
     await stan.connect(
       process.env.NATS_CLUSTER_ID,
@@ -27,6 +32,9 @@ const start = async () => {
 
     process.on("SIGINT", () => stan.client.close());
     process.on("SIGTERM", () => stan.client.close());
+
+    // listen/subscribe to events
+    new OrderCreatedListener(stan.client).subscribe();
   } catch (err) {
     console.error(err);
     return;
