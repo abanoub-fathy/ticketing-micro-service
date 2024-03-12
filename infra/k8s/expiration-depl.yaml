@@ -29,5 +29,5 @@ spec:
               value: http://nats-srv:4222
           resources:
             limits:
-              memory: "128Mi"
+              memory: "256Mi"
               cpu: "500m"
