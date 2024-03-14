@@ -8,10 +8,16 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
   queueGroupName = queueGroupName;
 
   onMessage(data: OrderCreatedEvent["data"], msg: Message): void {
+    const delay = new Date(data.expiresAt).getTime() - new Date().getTime();
     // add a job to the expiration queue
-    expirationQueue.add({
-      orderId: data.id,
-    });
+    expirationQueue.add(
+      {
+        orderId: data.id,
+      },
+      {
+        delay,
+      }
+    );
 
     // ack the msg
     msg.ack();

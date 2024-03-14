@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ticketiano/common": "^1.0.15",
+    "@ticketiano/common": "^1.0.18",
     "bull": "^4.12.2",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
