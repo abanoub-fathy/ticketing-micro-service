@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import stan from "./nats-client-wrapper";
 import { TicketCreatedListener } from "./events/listeners/ticket-created-listener";
 import { TicketUpdatedListener } from "./events/listeners/ticket-updated-listener";
+import { OrderExpirationCompleteListener } from "./events/listeners/order-expiration-complete-listener";
 
 const start = async () => {
   // check the secret key exists
@@ -46,6 +47,7 @@ const start = async () => {
     //subscribe to events
     new TicketCreatedListener(stan.client).subscribe();
     new TicketUpdatedListener(stan.client).subscribe();
+    new OrderExpirationCompleteListener(stan.client).subscribe();
   } catch (err) {
     console.error(err);
     return;
