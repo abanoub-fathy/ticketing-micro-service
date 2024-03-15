@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
-import { Ticket, TicketAttrs, TicketDoc } from "../models/ticket";
 
 export const signin = (id: string = generateRandomId()) => {
   // create jwt token with email and id as payload
@@ -23,14 +22,4 @@ export const signin = (id: string = generateRandomId()) => {
 
 export const generateRandomId = (): string => {
   return new mongoose.Types.ObjectId().toHexString();
-};
-
-export const saveTicket = async (
-  attrs: TicketAttrs = {
-    title: "new title",
-    price: 500,
-    userId: generateRandomId(),
-  }
-): Promise<TicketDoc> => {
-  return Ticket.build(attrs).save();
 };
