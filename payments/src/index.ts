@@ -2,6 +2,7 @@ import { app } from "./app";
 import mongoose from "mongoose";
 import stan from "./nats-client-wrapper";
 import natsClientWrapper from "./nats-client-wrapper";
+import { OrderCreatedListener } from "./events/listeners/order-created-listener";
 
 const start = async () => {
   // check the secret key exists
@@ -39,7 +40,8 @@ const start = async () => {
       process.exit();
     });
 
-    // TODO: listen to events
+    // subscribe/listen to events
+    new OrderCreatedListener(natsClientWrapper.client).subscribe();
 
     process.on("SIGINT", () => stan.client.close());
     process.on("SIGTERM", () => stan.client.close());
