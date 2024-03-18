@@ -1,22 +1,27 @@
-import { OrderCreatedEvent, OrderStatus } from "@ticketiano/common";
+import { OrderCancelledEvent, OrderStatus } from "@ticketiano/common";
 import natsClientWrapper from "../../../nats-client-wrapper";
-import { OrderCreatedListener } from "../order-created-listener";
 import { Message } from "node-nats-streaming";
 import { generateRandomId } from "../../../test/helpers";
 import { Order } from "../../../models/order";
+import { OrderCancelledListener } from "../order-cancelled-listener";
 
 const setup = async () => {
-  const listener = new OrderCreatedListener(natsClientWrapper.client);
+  const listener = new OrderCancelledListener(natsClientWrapper.client);
 
-  const data: OrderCreatedEvent["data"] = {
+  const order = Order.build({
     id: generateRandomId(),
+    status: OrderStatus.Created,
+    price: 100,
     userId: generateRandomId(),
     version: 0,
-    expiresAt: new Date().toISOString(),
-    status: OrderStatus.Created,
+  });
+  await order.save();
+
+  const data: OrderCancelledEvent["data"] = {
+    id: order.id,
+    version: 1,
     ticket: {
       id: generateRandomId(),
-      price: 100,
     },
   };
 
@@ -28,16 +33,20 @@ const setup = async () => {
   return { listener, data, msg };
 };
 
-describe("payment service listen to order created event", () => {
-  it("should create new order", async () => {
+describe("payment service listen to order cancelled event", () => {
+  it("should cancel the order", async () => {
     const { listener, msg, data } = await setup();
+    let order = await Order.findById(data.id);
+    expect(order).toBeDefined();
+    expect(order!.status).toEqual(OrderStatus.Created);
+    expect(order!.version).toEqual(data.version - 1);
+
     await listener.onMessage(data, msg);
 
-    const order = await Order.findById(data.id);
+    order = await Order.findById(data.id);
     expect(order).toBeDefined();
-    expect(order!.id).toEqual(data.id);
+    expect(order!.status).toEqual(OrderStatus.Cancelled);
     expect(order!.version).toEqual(data.version);
-    expect(order!.price).toEqual(data.ticket.price);
   });
 
   it("should ack the msg", async () => {

@@ -19,6 +19,10 @@ interface OrderDoc extends mongoose.Document {
 
 interface OrderModel extends mongoose.Model<OrderDoc> {
   build(attrs: OrderAttrs): OrderDoc;
+  findByEvent(eventData: {
+    id: string;
+    version: number;
+  }): Promise<OrderDoc | null>;
 }
 
 const orderSchema = new mongoose.Schema(
@@ -51,6 +55,16 @@ orderSchema.statics.build = function (attrs: OrderAttrs): OrderDoc {
   return new Order({
     _id: attrs.id,
     ...attrs,
+  });
+};
+
+orderSchema.statics.findByEvent = async function (eventData: {
+  id: string;
+  version: number;
+}): Promise<OrderDoc | null> {
+  return Order.findOne({
+    _id: eventData.id,
+    version: eventData.version - 1,
   });
 };
 
