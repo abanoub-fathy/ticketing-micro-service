@@ -8,6 +8,8 @@ import {
 } from "@ticketiano/common";
 import { stripe } from "../stripe";
 import { Payment } from "../models/payment";
+import { PaymentCreatedPublisher } from "../events/publishers/payment-created-publisher";
+import natsClientWrapper from "../nats-client-wrapper";
 
 export const createNewPayment = async (req: Request, res: Response) => {
   const { orderId, token } = req.body;
@@ -37,6 +39,8 @@ export const createNewPayment = async (req: Request, res: Response) => {
     chargeId: charge.id,
     orderId: orderId,
   }).save();
+
+  new PaymentCreatedPublisher(natsClientWrapper.client);
 
   res.status(201).send(payment);
 };
