@@ -19,6 +19,11 @@ export class OrderExpirationCompleteListener extends Listener<OrderExpirationCom
       throw new Error("order not found");
     }
 
+    // if the order is completed ack the message early
+    if (order.status === OrderStatus.Completed) {
+      return msg.ack();
+    }
+
     order.status = OrderStatus.Cancelled;
     await order.save();
 
