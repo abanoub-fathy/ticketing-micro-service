@@ -23,3 +23,5 @@ export * from "./events/types/order-status";
 export * from "./events/orders/order-created-event";
 export * from "./events/orders/order-cancelled-event";
 export * from "./events/orders/order-expiration-complete-event";
+
+export * from "./events/payments/payment-created-event";
