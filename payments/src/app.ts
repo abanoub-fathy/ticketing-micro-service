@@ -1,6 +1,7 @@
 import express from "express";
 require("express-async-errors");
 import cookieSession from "cookie-session";
+import { paymentRouter } from "./routes/payment-router";
 
 import { currentUser, errorHandler, NotFoundError } from "@ticketiano/common";
 
@@ -18,8 +19,8 @@ app.use(
 
 app.use(currentUser);
 
-// TODO: register Routes
-// app.use();
+// Register routes
+app.use("/api/payments", paymentRouter);
 
 // Not Found handler
 app.all("*", async () => {
