@@ -30,7 +30,11 @@ AppComponent.getInitialProps = async (appCtx) => {
   // if tge component has getInitilProps
   if (appCtx.Component.getInitialProps) {
     try {
-      pageProps = await appCtx.Component.getInitialProps(appCtx.ctx);
+      pageProps = await appCtx.Component.getInitialProps(
+        appCtx.ctx,
+        client,
+        data.currentUser
+      );
     } catch (err) {
       console.log(
         "Error while running getInitialProps of the Component =",
