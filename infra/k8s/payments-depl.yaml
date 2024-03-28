@@ -22,6 +22,11 @@ spec:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_SECRET_KEY
+            - name: STRIPE_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-secret
+                  key: STRIPE_SECRET_KEY
             - name: MONGO_URI
               value: mongodb://payments-mongo-srv:27017/payments
             - name: NATS_CLUSTER_ID
@@ -34,7 +39,7 @@ spec:
               value: http://nats-srv:4222
           resources:
             limits:
-              memory: "256Mi"
+              memory: "500Mi"
               cpu: "1000m"
 
 ---
