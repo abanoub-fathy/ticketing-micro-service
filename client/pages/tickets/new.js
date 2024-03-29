@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useRequest } from "../../hooks/useRequest";
+import { useRouter } from "next/router";
 
 const NewTicket = () => {
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
+
+  const router = useRouter();
 
   const requestConfig = {
     url: "/api/tickets",
@@ -12,7 +15,7 @@ const NewTicket = () => {
       title,
       price,
     },
-    onSuccess: (data) => console.log(data),
+    onSuccess: () => router.push("/"),
   };
   const [doRequest, errsJSX] = useRequest(requestConfig);
 
