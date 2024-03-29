@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const Header = ({ currentUser }) => {
   const links = [
     !currentUser && {
@@ -16,18 +18,18 @@ const Header = ({ currentUser }) => {
     .filter((linkConfig) => linkConfig)
     .map((linkConfig) => (
       <li key={linkConfig.href} className="nav-item">
-        <a href={linkConfig.href} className="nav-link">
+        <Link href={linkConfig.href} className="nav-link">
           {linkConfig.label}
-        </a>
+        </Link>
       </li>
     ));
 
   return (
     <nav className="navbar navbar-dark bg-dark mb-4">
       <div className="container">
-        <a className="navbar-brand" href="/">
+        <Link className="navbar-brand" href="/">
           GitTix
-        </a>
+        </Link>
 
         <div className="d-flex justify-content-end">
           <ul className="d-flex nav align-items-center">{links}</ul>
