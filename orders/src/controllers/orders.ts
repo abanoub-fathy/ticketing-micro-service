@@ -11,7 +11,7 @@ import { OrderCreatedPublisher } from "../events/publishers/order-created-publis
 import natsClientWrapper from "../nats-client-wrapper";
 import { OrderCancelledPublisher } from "../events/publishers/order-cancelled-publisher";
 
-const EXPIRATION_WINDOW = 15 * 60;
+const EXPIRATION_WINDOW = 1 * 60;
 
 export const getAllOrders = async (req: Request, res: Response) => {
   const userOrders = await Order.find({
