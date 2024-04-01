@@ -16,6 +16,12 @@ spec:
         - name: client
           image: abanoubfathy/client
           imagePullPolicy: IfNotPresent
+          env:
+            - name: STRIPE_PUBLISHABLE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-secret
+                  key: STRIPE_PUBLISHABLE_KEY
           resources:
             limits:
               memory: "1Gi"
