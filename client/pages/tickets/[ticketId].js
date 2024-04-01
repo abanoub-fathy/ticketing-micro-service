@@ -21,7 +21,7 @@ const TicketShow = ({ ticket }) => {
       <h2 className="text-info">Title: {ticket.title}</h2>
       <h3 className="text-info">Price: {ticket.price} USD</h3>
       {errsJSX}
-      <button onClick={doRequest} className="btn btn-primary">
+      <button onClick={(e) => doRequest()} className="btn btn-primary">
         Purchacse
       </button>
     </div>
