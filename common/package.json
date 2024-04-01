@@ -1,6 +1,6 @@
 {
   "name": "@ticketiano/common",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "common shared library between the micro services",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",

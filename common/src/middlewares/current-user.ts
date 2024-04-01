@@ -21,6 +21,7 @@ export const currentUser = async (
 ) => {
   // get the session from req
   if (!req.session?.token) {
+    console.log("no token is provided");
     return next();
   }
 
@@ -33,7 +34,10 @@ export const currentUser = async (
 
     // set the user in the req
     req.currentUser = payload;
-  } catch (err) {}
+  } catch (err) {
+    console.error("could not verify the token");
+    console.error(err);
+  }
 
   next();
 };
