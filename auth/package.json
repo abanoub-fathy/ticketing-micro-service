@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon src/index.ts",
     "test": "jest --watchAll --no-cache",
-    "start": "nodemon src/index.ts"
+    "test:ci": "jest"
   },
   "jest": {
     "preset": "ts-jest",
