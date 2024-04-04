@@ -11,6 +11,14 @@ const Header = ({ currentUser }) => {
       href: "/auth/signup",
     },
     currentUser && {
+      label: "Sell Tickets",
+      href: "/tickets/new",
+    },
+    currentUser && {
+      label: "My Orders",
+      href: "/orders",
+    },
+    currentUser && {
       label: "Sign Out",
       href: "/auth/signout",
     },
@@ -18,7 +26,7 @@ const Header = ({ currentUser }) => {
     .filter((linkConfig) => linkConfig)
     .map((linkConfig) => (
       <li key={linkConfig.href} className="nav-item">
-        <Link href={linkConfig.href} className="nav-link">
+        <Link href={linkConfig.href} className="nav-link text-white">
           {linkConfig.label}
         </Link>
       </li>
