@@ -42,7 +42,8 @@ export const getTicket = async (req: Request, res: Response) => {
 };
 
 export const getAllTickets = async (req: Request, res: Response) => {
-  const tickets = await Ticket.find();
+  // fetch only the available ticket that can be bought
+  const tickets = await Ticket.find({ orderId: undefined });
   res.status(200).json(tickets);
 };
 

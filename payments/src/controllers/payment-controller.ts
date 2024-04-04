@@ -40,7 +40,11 @@ export const createNewPayment = async (req: Request, res: Response) => {
     orderId: orderId,
   }).save();
 
-  new PaymentCreatedPublisher(natsClientWrapper.client);
+  new PaymentCreatedPublisher(natsClientWrapper.client).publish({
+    id: payment.id,
+    chargeId: payment.chargeId,
+    orderId: payment.orderId,
+  });
 
   res.status(201).send(payment);
 };

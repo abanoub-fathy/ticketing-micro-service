@@ -2,9 +2,17 @@ import React from "react";
 import Link from "next/link";
 
 const LandingPage = ({ currentUser, tickets }) => {
+  if (!tickets.length) {
+    return (
+      <h3 className="text-info">
+        🙇‍♂️ Sorry! There are no available Tickets here..
+      </h3>
+    );
+  }
+
   return (
     <div>
-      <h1>Tickets List</h1>
+      <h1>Available Tickets List</h1>
       <table className="table text-center table-bordered">
         <thead>
           <tr>
