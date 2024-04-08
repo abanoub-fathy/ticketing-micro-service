@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        
+
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -22,5 +22,8 @@ jobs:
       - name: Save DigitalOcean kubeconfig
         run: doctl kubernetes cluster kubeconfig save ${{ secrets.DIGITALOCEAN_KUBERNETES_CLUSTER_NAME }}
 
-      - name: Apply all k8s manifests files to work on the cluster
+      - name: Apply common k8s manifests files to work on the cluster
         run: kubectl apply -f infra/k8s
+
+      - name: Apply production k8s manifests files to work on the cluster
+        run: kubectl apply -f infra/k8s-prod

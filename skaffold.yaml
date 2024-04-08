@@ -55,3 +55,4 @@ build:
 manifests:
   rawYaml:
     - infra/k8s/*
+    - infra/k8s-dev/*
