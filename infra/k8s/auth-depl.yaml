@@ -24,11 +24,6 @@ spec:
                   key: JWT_SECRET_KEY
             - name: MONGO_URI
               value: mongodb://auth-mongo-srv:27017/auth
-          resources:
-            limits:
-              memory: "256Mi"
-              cpu: "1000m"
-
 ---
 apiVersion: v1
 kind: Service

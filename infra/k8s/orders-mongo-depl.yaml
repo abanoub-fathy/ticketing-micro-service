@@ -15,10 +15,6 @@ spec:
       containers:
         - name: orders-mongo
           image: mongo
-          resources:
-            limits:
-              memory: "128Mi"
-              cpu: "125m"
 ---
 apiVersion: v1
 kind: Service

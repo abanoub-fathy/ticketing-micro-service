@@ -22,3 +22,14 @@ jobs:
 
       - name: push a new image to dockerhub
         run: docker push ${{ secrets.DOCKER_USER_NAME }}/auth
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Save DigitalOcean kubeconfig
+        run: doctl kubernetes cluster kubeconfig save ${{ secrets.DIGITALOCEAN_KUBERNETES_CLUSTER_NAME }}
+
+      - name: restart the auth service deployment
+        run: kubectl rollout restart deployment auth-depl
