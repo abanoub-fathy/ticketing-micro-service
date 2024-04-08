@@ -11,11 +11,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - run: cd auth && docker build -t $DOCKER_USER_NAME/auth .
-      - run: docker login -u $DOCKER_USER_NAME -p $DOCKER_PASSWORD
-      - run: docker push $DOCKER_USER_NAME/auth
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-env:
-  DOCKER_USER_NAME: ${{ secrets.DOCKER_USER_NAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - name: build an image
+        run: cd auth && docker build -t ${{ secrets.DOCKER_USER_NAME }}/auth .
+
+      - name: login to dockerhub
+        run: docker login -u ${{ secrets.DOCKER_USER_NAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: push a new image to dockerhub
+        run: docker push ${{ secrets.DOCKER_USER_NAME }}/auth
