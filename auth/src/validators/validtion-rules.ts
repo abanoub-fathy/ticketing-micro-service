@@ -5,7 +5,7 @@ export const signupValidatos = [
     .trim()
     .toLowerCase()
     .isEmail()
-    .withMessage("Please enter a valid email"),
+    .withMessage("Please enter a valid email address"),
   body("password")
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters long"),
