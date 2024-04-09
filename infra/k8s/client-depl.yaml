@@ -15,7 +15,7 @@ spec:
       containers:
         - name: client
           image: abanoubfathy/client
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: STRIPE_PUBLISHABLE_KEY
               valueFrom:

@@ -15,7 +15,7 @@ spec:
       containers:
         - name: tickets
           image: abanoubfathy/tickets
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: JWT_SECRET_KEY
               valueFrom:

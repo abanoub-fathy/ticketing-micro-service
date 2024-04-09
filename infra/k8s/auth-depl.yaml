@@ -15,7 +15,7 @@ spec:
       containers:
         - name: auth
           image: abanoubfathy/auth
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: JWT_SECRET_KEY
               valueFrom:
