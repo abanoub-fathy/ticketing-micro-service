@@ -2,7 +2,8 @@ name: auth-service-deployment
 
 on:
   push:
-    branches: main
+    branches:
+      - main
     paths:
       - "auth/**"
 
