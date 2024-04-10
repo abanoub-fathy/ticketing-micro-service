@@ -10,6 +10,8 @@ This GitHub repository hosts a sophisticated ticketing system meticulously craft
 - **Payments Service:** Enables payment processing for unexpired orders.
 - **Client Service:** Powers the user interface, built with Next.js.
 
+To facilitate communication between services, the system employs an event-driven architecture. Events are used to trigger actions and share information across different parts of the system. To achieve this, the project utilizes **nats-streaming-server**, a robust and efficient event streaming server.
+
 To tackle concurrency challenges, the system adopts an optimistic approach leveraging versioning mechanisms to maintain data integrity across records.
 
 ## Infrastructure Configuration
