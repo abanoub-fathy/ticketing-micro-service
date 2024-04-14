@@ -23,7 +23,10 @@ This GitHub repository hosts a sophisticated ticketing system meticulously craft
 
 - The **Common** directory contains the [@ticketiano/common](https://www.npmjs.com/package/@ticketiano/common) package. This package is created to have common definitions about the events sent/received between the microservices and also the common middleware that can be used in more than one service.
 
+### communications between services
 To facilitate communication between services, the system employs an event-driven architecture. Events are used to trigger actions and share information across different parts of the system. To achieve this, the project utilizes **nats-streaming-server**, a robust and efficient event streaming server.
+
+### Handling Concurrency issues
 
 To tackle concurrency challenges, the system adopts an optimistic approach leveraging versioning mechanisms to maintain data integrity across records.
 
@@ -67,42 +70,42 @@ cd ticketing-micro-services
 
 3. Set up Kubernetes Secrets:
 
-- Setting JWT secret key:
-
-  ```bash
-  kubectl create secret generic jwt-secret --from-literal=JWT_SECRET_KEY=<define-secret-here>
-  ```
-  Response should be:
-
-  ```
-  secret/jwt-secret created
-  ```
-
-- Setting Stripe secret Keys:
-
-  ```bash
-  kubectl create secret generic stripe-secret --from-literal=STRIPE_PUBLISHABLE_KEY=<define-secret-here> --from-literal=STRIPE_SECRET_KEY=<define-secret-here>
-  ```
-
-  Response should be:
-
-  ```
-  secret/stripe-secret created
-  ```
+  - Setting JWT secret key:
+  
+    ```bash
+    kubectl create secret generic jwt-secret --from-literal=JWT_SECRET_KEY=<define-secret-here>
+    ```
+    Response should be:
+  
+    ```
+    secret/jwt-secret created
+    ```
+  
+  - Setting Stripe secret Keys:
+  
+    ```bash
+    kubectl create secret generic stripe-secret --from-literal=STRIPE_PUBLISHABLE_KEY=<define-secret-here> --from-literal=STRIPE_SECRET_KEY=<define-secret-here>
+    ```
+  
+    Response should be:
+  
+    ```
+    secret/stripe-secret created
+    ```
 4. Configure the Ingress-Nginx according to your operating system.
 
-- you can visit the [ingress-nginx offical page](https://kubernetes.github.io/ingress-nginx/) and following the installation steps according to your OS.
+  - you can visit the [ingress-nginx offical page](https://kubernetes.github.io/ingress-nginx/) and following the installation steps according to your OS.
 
 6. Replace docker user name
 
-- Make sure to replace my docker user name from used images in the infra directory if you want to build and a new image and push it to docker hub.
+  - Make sure to replace my docker user name from used images in the infra directory if you want to build and a new image and push it to docker hub.
 
 7. Use skaffold to run the project
 
-- Install skaffold to start the project from [skaffold offical page](https://skaffold.dev/)
-
-- Run the project
-
-  ```bash
-  skaffold dev
-  ```
+  - Install skaffold to start the project from [skaffold offical page](https://skaffold.dev/)
+  
+  - Run the project
+  
+    ```bash
+    skaffold dev
+    ```
