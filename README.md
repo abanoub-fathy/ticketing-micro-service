@@ -13,6 +13,7 @@ This GitHub repository hosts a sophisticated ticketing system meticulously craft
 
 ## Microservices Overview
 
+- **Auth Service:** Responsible for user authentication _(SignUp, SignIn, SignOut)_ 
 - **Tickets Service:** Responsible for handling ticket creation and updates.
 - **Orders Service:** Facilitates the creation of orders for specific tickets.
 - **Expiration Service:** Monitors orders to ensure timely expiration.
