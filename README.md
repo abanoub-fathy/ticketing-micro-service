@@ -103,6 +103,6 @@ cd ticketing-micro-services
 
 - Run the project
 
-```bash
-skaffold dev
-```
+  ```bash
+  skaffold dev
+  ```
